@@ -1,0 +1,26 @@
+energy_analysis/
+├── config/
+│   └── config.json          # Configuration parameters
+├── models/
+│   ├── __init__.py
+│   ├── prophet_model.py     # Prophet model implementation
+│   └── saved/               # Directory for saved models
+├── data/
+│   ├── __init__.py
+│   ├── mongodb_connector.py # Database connector
+│   ├── data_pipeline.py     # Data processing pipeline
+│   ├── data_source.py       # Real-time data sources
+│   └── energy_data.csv      # Sample data file
+├── analysis/
+│   ├── __init__.py 
+│   ├── temperature_analysis.py  # Temperature correlation analysis
+│   └── visualization.py         # Visualization utilities
+├── dashboard/
+│   ├── __init__.py
+│   └── app.py               # Streamlit dashboard
+├── utils/
+│   ├── __init__.py
+│   └── helpers.py           # Helper functions
+├── figures/                 # Output directory for figures
+├── main.py                  # Application entry point
+└── README.md                # Project documentation

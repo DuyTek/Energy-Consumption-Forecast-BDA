@@ -1,0 +1,54 @@
+{
+    "data_source": {
+        "type": "csv",
+        "csv_path": "data/energy_data.csv",
+        "use_real_time": true,
+        "real_time_config": {
+            "source_type": "simulation",
+            "simulation": {
+                "interval_seconds": 5.0,
+                "base_demand": 50.0,
+                "base_temperature": 20.0,
+                "day_cycle_amplitude": 15.0,
+                "season_cycle_amplitude": 15.0,
+                "weekday_factor": 10.0,
+                "hour_factor": 15.0,
+                "noise_factor": 5.0,
+                "temperature_noise": 2.0
+            },
+            "api": {
+                "url": null,
+                "api_key": null,
+                "interval_seconds": 60.0
+            },
+            "csv": {
+                "path": "data/energy_data.csv",
+                "interval_seconds": 5.0,
+                "loop": true
+            }
+        }
+    },
+    "database": {
+        "use_mongodb": true,
+        "connection_string": "mongodb://localhost:27017/",
+        "db_name": "energy_consumption_db",
+        "collection_name": "consumption_data"
+    },
+    "analysis": {
+        "forecast_periods": 365,
+        "save_figures": true,
+        "figures_directory": "figures",
+        "update_frequency_hours": 24,
+        "peak_threshold_percentile": 90
+    },
+    "model": {
+        "seasonality_mode": "multiplicative",
+        "changepoint_prior_scale": 0.05,
+        "include_temperature": true
+    },
+    "dashboard": {
+        "port": 8501,
+        "theme": "light",
+        "update_interval_seconds": 10
+    }
+}
