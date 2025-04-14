@@ -6,7 +6,8 @@ import pandas as pd
 import logging
 import os
 import json
-
+import urllib
+import certifi
 # Configure logging
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -15,20 +16,27 @@ logger = logging.getLogger("MongoDBConnector")
 
 class EnergyDatabaseConnector:
     """Connector for MongoDB operations with energy consumption data."""
+    username = os.environ.get("MONGODB_USER")
+    password = os.environ.get("MONGODB_PASSWORD")
 
-    def __init__(self, connection_string=None, db_name="energy_consumption_db"):
+    encoded_username = urllib.parse.quote_plus(username) if username else None
+    encoded_password = urllib.parse.quote_plus(password) if password else None
+
+    def __init__(self, connection_string=None, db_name="energy_consumption_bda"):
         """Initialize database connection."""
         # Use environment variable if connection string not provided
-        if connection_string is None:
-            connection_string = os.environ.get(
-                "MONGODB_URI", "mongodb://localhost:27017/")
+        if connection_string is None and self.encoded_username and self.encoded_password:
+            connection_string = f"mongodb+srv://{self.encoded_username}:{self.encoded_password}@energy-consumption-bda.obgdd.mongodb.net/?retryWrites=true&w=majority&appName=energy-consumption-bda",
 
         self.client = None
         self.db = None
         self.consumption_collection = None
 
+        logger.info(
+            f"Connecting to MongoDB with connection string: {connection_string}")
         try:
-            self.client = MongoClient(connection_string)
+            self.client = MongoClient(
+                connection_string, tlsCAFile=certifi.where())
             self.db = self.client[db_name]
 
             # Create collections with time-series optimization
@@ -48,20 +56,6 @@ class EnergyDatabaseConnector:
         except Exception as e:
             logger.error(f"Failed to connect to MongoDB: {e}")
             # Initialize a fallback CSV storage mechanism
-            self._init_csv_fallback()
-
-    def _init_csv_fallback(self):
-        """Initialize CSV fallback storage when MongoDB is unavailable."""
-        logger.warning("Initializing CSV fallback storage for data")
-        self.csv_fallback_dir = "data/csv_fallback"
-        os.makedirs(self.csv_fallback_dir, exist_ok=True)
-
-        # Create empty DataFrame if no existing data
-        self.csv_fallback_file = f"{self.csv_fallback_dir}/energy_data.csv"
-        if not os.path.exists(self.csv_fallback_file):
-            empty_df = pd.DataFrame(columns=['timestamp', 'demand', 'temperature',
-                                             'hour', 'day_of_week', 'month', 'year'])
-            empty_df.to_csv(self.csv_fallback_file, index=False)
 
     def is_connected(self):
         """Check if connected to MongoDB."""

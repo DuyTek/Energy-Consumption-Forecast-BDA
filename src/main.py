@@ -92,9 +92,7 @@ def run_analysis(config):
 
     # Initialize database connector
     db_config = config['database']
-    db_connector = EnergyDatabaseConnector(
-        connection_string=db_config['connection_string'] if db_config['use_mongodb'] else None
-    )
+    db_connector = EnergyDatabaseConnector()
 
     # Initialize data source
     data_source_config = config['data_source']
@@ -189,9 +187,7 @@ def run_real_time_analysis(config):
     logger.info("Starting real-time energy consumption analysis")
 
     # Initialize components
-    db_connector = EnergyDatabaseConnector(
-        connection_string=config['database']['connection_string'] if config['database']['use_mongodb'] else None
-    )
+    db_connector = EnergyDatabaseConnector()
 
     prophet_model = EnergyProphetModel()
 

@@ -30,8 +30,8 @@
     },
     "database": {
         "use_mongodb": true,
-        "connection_string": "mongodb://localhost:27017/",
-        "db_name": "energy_consumption_db",
+        "connection_string": "mongodb+srv://nguyendangvuduy12t2:Dudikun13@@energy-consumption-bda.obgdd.mongodb.net/?retryWrites=true&w=majority&appName=energy-consumption-bda",
+        "db_name": "energy_consumption_bda",
         "collection_name": "consumption_data"
     },
     "analysis": {
