@@ -1,0 +1,2 @@
+- Streamlit: python -m streamlit run dashboard/dashboard.py
+- Main: python main.py --config config/config.json
