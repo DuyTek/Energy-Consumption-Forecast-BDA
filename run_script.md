@@ -1,4 +1,8 @@
-.env
+DEMO Steps:
+1. Run `dashboard.py` to see forecasting
+2. Run `enhanced_dashboard.py` for advanced analysis
+3. Run `evaluation.py` for getting evaluation
+
 # How to run
 To run the scripts, use the following commands in your (zsh) terminal:
 ~zsh - source .zshrc
