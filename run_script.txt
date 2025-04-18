@@ -3,6 +3,6 @@
 ~zsh - source .zshrc
 
 
-- Heatmap: python -m streamlit run dashboard/dashboard.py
+- Forecast, heatmap: python -m streamlit run dashboard/dashboard.py
 - Enhanced pattern analysis (hourly, weekday vs weekend, peak period analysis, temperature impact): python -m streamlit run dashboard/enhanced_dashboard.py
 - Main: python main.py --config config/config.json
