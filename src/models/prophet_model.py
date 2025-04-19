@@ -40,8 +40,13 @@ class EnergyProphetModel:
                 logger.error(f"Error loading model: {e}")
                 self.model = None
 
+    # Modified _prepare_data method for prophet_model.py
+
     def _prepare_data(self, df):
         """Prepare dataframe for Prophet model."""
+        # Make a copy to avoid modifying the original dataframe
+        df = df.copy()
+
         # Prophet requires columns 'ds' and 'y'
         if 'ds' not in df.columns and 'timestamp' in df.columns:
             df['ds'] = df['timestamp']
@@ -52,25 +57,63 @@ class EnergyProphetModel:
         # Ensure ds is datetime type
         df['ds'] = pd.to_datetime(df['ds'])
 
-        # Make a copy of the required columns
+        # Create the base prophet dataframe
         prophet_df = df[['ds', 'y']]
 
-        # Add temperature as regressor if available
+        # Add temperature as regressor if available, with NaN handling
         if 'temperature' in df.columns:
-            prophet_df['temperature'] = df['temperature']
+            # Check for NaN values in temperature
+            if df['temperature'].isna().any():
+                logger.warning(
+                    f"Found {df['temperature'].isna().sum()} NaN values in temperature column")
+
+                # Option 1: Fill NaN with median temperature (safer than mean for outliers)
+                temp_median = df['temperature'].median()
+                prophet_df['temperature'] = df['temperature'].fillna(
+                    temp_median)
+                logger.info(
+                    f"Filled NaN temperature values with median: {temp_median}")
+
+                # Option 2 (alternative): Drop rows with NaN temperature
+                # prophet_df = prophet_df[~df['temperature'].isna()]
+                # logger.info(f"Dropped {len(df) - len(prophet_df)} rows with NaN temperature values")
+            else:
+                # No NaN values, just copy the column
+                prophet_df['temperature'] = df['temperature']
 
         return prophet_df
 
-    def train(self, df, include_temperature=False):
-        """Train the Prophet model."""
+    # Modified train method to properly handle temperature inclusion
+
+    def train(self, df, include_temperature=None):
+        """Train the Prophet model.
+
+        Args:
+            df: DataFrame with training data
+            include_temperature: Whether to include temperature as a regressor.
+                                If None, will be determined by presence of temperature column.
+        """
         # Prepare data
         prophet_df = self._prepare_data(df)
+
+        # Determine whether to include temperature
+        has_temperature = 'temperature' in prophet_df.columns
+        if include_temperature is None:
+            # Auto-detect based on data presence
+            include_temperature = has_temperature
+
+        # Validate temperature usage
+        if include_temperature and not has_temperature:
+            logger.warning(
+                "Temperature inclusion requested but no temperature data available")
+            include_temperature = False
 
         # Initialize a new Prophet model
         model = Prophet()
 
-        # Add temperature as a regressor if available and requested
-        if include_temperature and 'temperature' in prophet_df.columns:
+        # Add temperature as a regressor if requested and available
+        if include_temperature:
+            logger.info("Adding temperature as a regressor in Prophet model")
             model.add_regressor('temperature')
 
         # Fit the model
