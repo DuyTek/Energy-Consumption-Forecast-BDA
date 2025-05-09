@@ -30,7 +30,7 @@
     },
     "database": {
         "use_mongodb": true,
-        "connection_string": "mongodb+srv://nguyendangvuduy12t2:dudikun@@energy-consumption-bda.obgdd.mongodb.net/?retryWrites=true&w=majority&appName=energy-consumption-bda",
+        "connection_string": "mongodb+srv://nguyendangvuduy12t2:dudikun@energy-consumption-bda.obgdd.mongodb.net/?retryWrites=true&w=majority&appName=energy-consumption-bda",
         "db_name": "energy_consumption_bda",
         "collection_name": "consumption_data"
     },

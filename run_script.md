@@ -5,13 +5,14 @@ DEMO Steps:
 
 # How to run
 To run the scripts, use the following commands in your (zsh) terminal:
-~zsh - source .zshrc
+- macOS: source .zshrc
+- Window: . .\env-setup.ps1
+
 
 
 - Forecast, heatmap: python -m streamlit run dashboard/dashboard.py
 - Enhanced pattern analysis (hourly, weekday vs weekend, peak period analysis, temperature impact): python -m streamlit run dashboard/enhanced_dashboard.py
-- Simulate data: python main.py --config config/config.json
-- Train model: python main.py
+- Simulate and train model with data: python main.py --config config/config.json
 
 
 # Evaluation
